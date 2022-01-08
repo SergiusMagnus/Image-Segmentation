@@ -38,8 +38,10 @@ int FlowNetwork::DFS(int current_point, int min_capacity)
 		return min_capacity;
 	}
 
-	for (Edge* edge : edges_incident_to_point[current_point])
+	for (int i{ accessible_edge_from_point[current_point] }; i < edges_incident_to_point[current_point].size(); ++i)
 	{
+		Edge* edge{ edges_incident_to_point[current_point][i] };
+
 		if ((edge->point_a == current_point) && (edge->capacity > edge->flow) && (shortest_path_to_point[edge->point_a] + 1 == shortest_path_to_point[edge->point_b]))
 		{
 			int delta{ DFS(edge->point_b, std::min(min_capacity, edge->capacity - edge->flow)) };
@@ -60,6 +62,7 @@ int FlowNetwork::DFS(int current_point, int min_capacity)
 				return delta;
 			}
 		}
+		++accessible_edge_from_point[current_point];
 	}
 	return 0;
 }
@@ -95,6 +98,7 @@ FlowNetwork::FlowNetwork(std::string file_path)
 	shortest_path_to_point.reserve(number_of_points);
 	first_edge_number_from_point.reserve(number_of_points);
 	edges_incident_to_point.resize(number_of_points);
+	accessible_edge_from_point.reserve(number_of_points);
 
 	// if first point equals 1 (must equal 0)
 	if (source == 1)
@@ -122,6 +126,9 @@ int FlowNetwork::find_max_flow()
 
 	while (BFS())
 	{
+		accessible_edge_from_point.clear();
+		accessible_edge_from_point.resize(number_of_points, 0);
+
 		while (flow = DFS(source, INT_MAX))
 		{
 			max_flow += flow;

@@ -23,6 +23,7 @@ private:
 
 	std::vector<Edge> list_of_edges;
 	std::vector<std::vector<Edge*>> edges_incident_to_point;
+	std::vector<int> accessible_edge_from_point;
 
 	bool BFS();
 	int DFS(int current_point, int min_capacity);
