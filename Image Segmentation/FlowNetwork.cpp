@@ -1,5 +1,69 @@
 #include "FlowNetwork.h"
 
+bool FlowNetwork::BFS()
+{
+	shortest_path_to_point.clear();
+	shortest_path_to_point.resize(number_of_points, -1);
+	shortest_path_to_point[source] = 0;
+
+	std::queue<int> Q;
+	Q.emplace(source);
+
+	while (!Q.empty())
+	{
+		int current_point{ Q.front() };
+		Q.pop();
+
+		for (const Edge* edge : edges_incident_to_point[current_point])
+		{
+			if ((edge->point_a == current_point) && (edge->capacity > edge->flow) && (shortest_path_to_point[edge->point_b] == -1))
+			{
+				shortest_path_to_point[edge->point_b] = shortest_path_to_point[edge->point_a] + 1;
+				Q.emplace(edge->point_b);
+			}
+			else if ((edge->point_b == current_point) && (edge->flow > 0) && (shortest_path_to_point[edge->point_a] == -1))
+			{
+				shortest_path_to_point[edge->point_a] = shortest_path_to_point[edge->point_b] + 1;
+				Q.emplace(edge->point_a);
+			}
+		}
+	}
+	return (shortest_path_to_point[sink] != -1) ? true : false;
+}
+
+int FlowNetwork::DFS(int current_point, int min_capacity)
+{
+	if ((current_point == sink) || (min_capacity == 0))
+	{
+		return min_capacity;
+	}
+
+	for (Edge* edge : edges_incident_to_point[current_point])
+	{
+		if ((edge->point_a == current_point) && (edge->capacity > edge->flow) && (shortest_path_to_point[edge->point_a] + 1 == shortest_path_to_point[edge->point_b]))
+		{
+			int delta{ DFS(edge->point_b, std::min(min_capacity, edge->capacity - edge->flow)) };
+
+			if (delta != 0)
+			{
+				edge->flow += delta;
+				return delta;
+			}
+		}
+		else if ((edge->point_b == current_point) && (edge->flow > 0) && (shortest_path_to_point[edge->point_a] == shortest_path_to_point[edge->point_b] + 1))
+		{
+			int delta{ DFS(edge->point_a, std::min(min_capacity, edge->flow)) };
+			
+			if (delta != 0)
+			{
+				edge->flow -= delta;
+				return delta;
+			}
+		}
+	}
+	return 0;
+}
+
 FlowNetwork::FlowNetwork(std::string file_path)
 {
 	std::ifstream inf{ file_path };
@@ -20,184 +84,59 @@ FlowNetwork::FlowNetwork(std::string file_path)
 	{
 		inf >> current_edge.point_a >> current_edge.point_b >> current_edge.capacity;
 
-		list_of_edges.push_back(current_edge);
+		list_of_edges.emplace_back(current_edge);
 	}
 
 	inf.close();
 
 	source = list_of_edges.front().point_a;
+	sink = number_of_points - 1;
 
-	if (source == 0)
+	shortest_path_to_point.reserve(number_of_points);
+	first_edge_number_from_point.reserve(number_of_points);
+	edges_incident_to_point.resize(number_of_points);
+
+	// if first point equals 1 (must equal 0)
+	if (source == 1)
 	{
-		sink = number_of_points - 1;
+		source = 0;
+
+		for (Edge& edge : list_of_edges)
+		{
+			--edge.point_a;
+			--edge.point_b;
+		}
 	}
-	else
+
+	for (Edge& edge : list_of_edges)
 	{
-		sink = number_of_points;
+		edges_incident_to_point[edge.point_a].emplace_back(&edge);
+		edges_incident_to_point[edge.point_b].emplace_back(&edge);
 	}
 }
 
-int FlowNetwork::find_maximum_flow()
+int FlowNetwork::find_max_flow()
 {
-	int flow_length{ 0 };
-	int maximum_flow{ 0 };
+	int max_flow{ 0 };
+	int flow{};
 
-	while (flow_length = BFS_layers_from_source_to_sink())
+	while (BFS())
 	{
-		int flow{ DFS_flow_from_source_to_sink(flow_length) };
-
-		maximum_flow += flow;
-
-		while (!DFS_flow.empty())
+		while (flow = DFS(source, INT_MAX))
 		{
-			auto& current_edge{ DFS_flow.top() };
-
-			for (auto& edge : list_of_edges)
-			{
-				if ((edge.point_a == current_edge.point_a) &&
-					(edge.point_b == current_edge.point_b))
-				{
-					edge.flow += flow;
-					break;
-				}
-				
-			}
-
-			DFS_flow.pop();
+			max_flow += flow;
 		}
 	}
-	return maximum_flow;
-}
-
-int FlowNetwork::BFS_layers_from_source_to_sink()
-{
-	BFS_layers.clear();
-
-	BFS_layers.push_back(std::set<int> { source });
-
-	std::set<int> visited_points{ source };
-	std::set<int> next_layer{};
-
-	while (true)
-	{
-		next_layer.clear();
-
-		for (const auto& edge : list_of_edges)
-		{
-			if ((edge.capacity - edge.flow != 0) && 
-				(BFS_layers.back().find(edge.point_a) != BFS_layers.back().cend()) &&
-				(visited_points.find(edge.point_b) == visited_points.cend()))
-			{
-				next_layer.emplace(edge.point_b);
-				visited_points.emplace(edge.point_b);
-			}
-		}
-		if (next_layer.empty())
-		{
-			break;
-		}
-
-		BFS_layers.push_back(next_layer);
-
-		if (next_layer.find(sink) != next_layer.cend())
-		{
-			BFS_layers.back() = std::set<int>{ sink };
-			break;
-		}
-	}
-
-	if (visited_points.find(sink) == visited_points.cend())
-	{
-		BFS_layers.clear();
-		return BFS_layers.size();
-	}
-	else
-	{
-		return BFS_layers.size() - 1;
-	}
-}
-
-int FlowNetwork::DFS_flow_from_source_to_sink(int flow_length)
-{
-	int flow{ 0 };
-
-	for (int i{ 0 }; i < flow_length; ++i)
-	{
-		for (const auto& edge : list_of_edges)
-		{
-			if (i == 0)
-			{
-				if ((edge.capacity - edge.flow != 0) &&
-					(edge.point_a == source) &&
-					(BFS_layers[i + 1].find(edge.point_b) != BFS_layers[i + 1].cend()))
-				{
-					DFS_flow.emplace(edge);
-
-					flow = edge.capacity - edge.flow;
-
-					break;
-				}
-			}
-			else
-			{
-				if ((edge.capacity - edge.flow != 0) &&
-					(edge.point_a == DFS_flow.top().point_b) &&
-					(BFS_layers[i + 1].find(edge.point_b) != BFS_layers[i + 1].cend()))
-				{
-					DFS_flow.emplace(edge);
-
-					if (flow > edge.capacity - edge.flow)
-					{
-						flow = edge.capacity - edge.flow;
-					}
-
-					break;
-				}
-			}
-		}
-	}
-
-	return flow;
+	return max_flow;
 }
 
 void FlowNetwork::print_list_of_edges()
 {
-	for (const auto& edge : list_of_edges)
+	std::cout << "Network" << std::endl;
+	for (const Edge& edge : list_of_edges)
 	{
 		std::cout << edge.point_a << ' ' << edge.point_b << ' '
 			<< edge.capacity << ' ' << edge.flow << std::endl;
 	}
-}
-
-void FlowNetwork::print_BFS_layers()
-{
-	int path_length_from_source_to_sink{ BFS_layers_from_source_to_sink() };
-
-	std::cout << path_length_from_source_to_sink << std::endl;
-
-	for (const auto& layer : BFS_layers)
-	{
-		for (auto point : layer)
-		{
-			std::cout << point << ' ';
-		}
-		std::cout << std::endl;
-	}
-}
-
-void FlowNetwork::print_DFS_layers()
-{
-	DFS_flow_from_source_to_sink(BFS_layers_from_source_to_sink());
-
-	std::cout << DFS_flow.size() << std::endl;
-
-	while (!DFS_flow.empty())
-	{
-		auto edge{ DFS_flow.top() };
-
-		std::cout << edge.point_a << ' ' << edge.point_b << ' '
-			<< edge.capacity << ' ' << edge.flow << std::endl;
-
-		DFS_flow.pop();
-	}
+	std::cout << std::endl;
 }

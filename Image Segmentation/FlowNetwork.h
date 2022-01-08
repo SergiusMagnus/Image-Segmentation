@@ -2,8 +2,7 @@
 #define FLOWNETWORK_H
 
 #include <vector>
-#include <set>
-#include <stack>
+#include <queue>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -16,29 +15,24 @@ class FlowNetwork
 private:
 	int number_of_points;
 	int number_of_edges;
-
-	std::vector<Edge> list_of_edges;
-
 	int source;
 	int sink;
 
+	std::vector<int> shortest_path_to_point;
+	std::vector<int> first_edge_number_from_point;
 
-	std::vector<std::set<int>> BFS_layers;
+	std::vector<Edge> list_of_edges;
+	std::vector<std::vector<Edge*>> edges_incident_to_point;
 
-	int BFS_layers_from_source_to_sink();
-
-	std::stack<Edge> DFS_flow;
-
-	int DFS_flow_from_source_to_sink(int flow_length);
+	bool BFS();
+	int DFS(int current_point, int min_capacity);
 
 public:
 	FlowNetwork(std::string file_path);
 
-	int find_maximum_flow();
+	int find_max_flow();
 
 	void print_list_of_edges();
-	void print_BFS_layers();
-	void print_DFS_layers();
 };
 
 #endif
