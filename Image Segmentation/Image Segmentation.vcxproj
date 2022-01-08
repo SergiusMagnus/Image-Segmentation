@@ -140,11 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Edge.cpp" />
+    <ClCompile Include="FindMaxFlowTest.cpp" />
     <ClCompile Include="FlowNetwork.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="FindMaxFlowTest.h" />
     <ClInclude Include="FlowNetwork.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

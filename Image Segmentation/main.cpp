@@ -2,13 +2,12 @@
 #include <string>
 
 #include "FlowNetwork.h"
+#include "FindMaxFlowTest.h"
 
 int main()
 {
-	std::cout << "start" << std::endl;
-
-	FlowNetwork test_graph{ std::string{ "test_graph.txt" } };
-	std::cout << test_graph.find_max_flow() << std::endl;
-
-	std::cout << "Function main() has completed.";
+	test_1();
+	test_2();
+	test_3();
+	test_4();
 }
