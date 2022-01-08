@@ -3,14 +3,14 @@
 
 #include "FlowNetwork.h"
 #include "FindMaxFlowTest.h"
+#include "Image.h"
 
 int main()
 {
-	//FlowNetwork test_graph{ std::string{ "test_graph.txt" } };
-	//std::cout << test_graph.find_max_flow() << std::endl;
+	/*FindMaxFlowTest::test_1();
+	FindMaxFlowTest::test_2();
+	FindMaxFlowTest::test_3();
+	FindMaxFlowTest::test_4();*/
 
-	test_1();
-	test_2();
-	test_3();
-	test_4();
+	Image image("Images/banana1-gr.jpg");
 }

@@ -1,6 +1,6 @@
 #include "FindMaxFlowTest.h"
 
-void test_1()
+void FindMaxFlowTest::test_1()
 {
 	FlowNetwork test_1{ std::string{ "MaxFlowTest/test_1.txt" } };
 	std::cout << test_1.find_max_flow() << std::endl;
@@ -21,7 +21,7 @@ void test_1()
 	std::cout << test_6.find_max_flow() << std::endl;
 }
 
-void test_2()
+void FindMaxFlowTest::test_2()
 {
 	FlowNetwork test_d1{ std::string{ "MaxFlowTest/test_d1.txt" } };
 	std::cout << test_d1.find_max_flow() << std::endl;
@@ -39,7 +39,7 @@ void test_2()
 	std::cout << test_d5.find_max_flow() << std::endl;
 }
 
-void test_3()
+void FindMaxFlowTest::test_3()
 {
 	FlowNetwork test_rd1{ std::string{ "MaxFlowTest/test_rd01.txt" } };
 	std::cout << test_rd1.find_max_flow() << std::endl;
@@ -63,7 +63,7 @@ void test_3()
 	std::cout << test_rd7.find_max_flow() << std::endl;
 }
 
-void test_4()
+void FindMaxFlowTest::test_4()
 {
 	FlowNetwork test_rl1{ std::string{ "MaxFlowTest/test_rl01.txt" } };
 	std::cout << test_rl1.find_max_flow() << std::endl;
