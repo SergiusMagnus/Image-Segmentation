@@ -100,7 +100,6 @@ FlowNetwork::FlowNetwork(std::string file_path)
 	edges_incident_to_point.resize(number_of_points);
 	accessible_edge_from_point.reserve(number_of_points);
 
-	// if first point equals 1 (must equal 0)
 	if (source == 1)
 	{
 		source = 0;

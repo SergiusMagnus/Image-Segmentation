@@ -13,4 +13,6 @@ int main()
 	FindMaxFlowTest::test_4();*/
 
 	Image image("Images/banana1-gr.jpg");
+	image.set_background_pixels("BackgroundPixels/banana1-gr.txt");
+	image.set_object_pixels("ObjectPixels/banana1-gr.txt");
 }
