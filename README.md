@@ -15,11 +15,13 @@ The user needs to indicate in the corresponding txt files the pixels that exactl
     315 395 360 415
 To segment an image, you need to create an object of the Image class. As parameters, you must specify: the address of the image file, the address of the file of pixels related to the background, the address of the file of pixels related to objects. <br/> Next, you need to call a segment_image method of an object of the Image class with three parameters. The first two are the coefficients used when calculating the weights of the edges, the third is a boolean variable, with the False value, the edges are built between the pixels only horizontally and vertically, with True, the edges are also built between the pixels along the diagonal. <br/> The save_image method with the file address saves the image.
 #### Example
-    Image image("Images/fullmoon-gr.jpg", "BackgroundPixels/fullmoon-gr.txt", "ObjectPixels/fullmoon-gr.txt");
+```c++
+Image image("Images/fullmoon-gr.jpg", "BackgroundPixels/fullmoon-gr.txt", "ObjectPixels/fullmoon-gr.txt");
 
-	const int sigma{ 2 };
-	const double lambda{ .5 };
-	const bool eight_edges{ false };
+const int sigma{ 2 };
+const double lambda{ .5 };
+const bool eight_edges{ false };
 
-	image.segment_image(sigma, lambda, eight_edges);
-	image.save_image("SegmentedImages/fullmoon-gr.jpg");
+image.segment_image(sigma, lambda, eight_edges);
+image.save_image("SegmentedImages/fullmoon-gr.jpg");
+```
