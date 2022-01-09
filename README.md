@@ -25,3 +25,5 @@ const bool eight_edges{ false };
 image.segment_image(sigma, lambda, eight_edges);
 image.save_image("SegmentedImages/fullmoon-gr.jpg");
 ```
+## An Example of Image Segmentation
+[Original image](Images/fullmoon-gr.jpg)
