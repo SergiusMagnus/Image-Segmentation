@@ -5,7 +5,7 @@ void ImageSegmentationExamples::banana()
 	Image image("Images/banana1-gr.jpg", "BackgroundPixels/banana1-gr.txt", "ObjectPixels/banana1-gr.txt");
 
 	const int sigma{ 2 };
-	const double lambda{ .1 };
+	const double lambda{ .0725 };
 	const bool eight_edges{ false };
 
 	image.segment_image(sigma, lambda, eight_edges);
