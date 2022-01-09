@@ -1,6 +1,8 @@
 #ifndef MAXFLOWTEST_H
 #define MAXFLOWTEST_H
 
+#include <iostream>
+
 #include "FlowNetwork.h"
 
 class FindMaxFlowTest

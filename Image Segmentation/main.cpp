@@ -1,6 +1,3 @@
-#include <iostream>
-#include <string>
-
 #include "FlowNetwork.h"
 #include "FindMaxFlowTest.h"
 #include "Image.h"
@@ -8,14 +5,13 @@
 
 int main()
 {
-	/*FindMaxFlowTest::test_1();
-	FindMaxFlowTest::test_2();
-	FindMaxFlowTest::test_3();
-	FindMaxFlowTest::test_4();*/
+	//FindMaxFlowTest::test_1();
+	//FindMaxFlowTest::test_2();
+	//FindMaxFlowTest::test_3();
+	//FindMaxFlowTest::test_4();
 
 	//ImageSegmentationExamples::banana();
 	//ImageSegmentationExamples::fullmoon();
-
 
 	Image image("Images/fullmoon-gr.jpg", "BackgroundPixels/fullmoon-gr.txt", "ObjectPixels/fullmoon-gr.txt");
 
