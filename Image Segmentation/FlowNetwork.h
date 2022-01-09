@@ -28,12 +28,20 @@ private:
 	bool BFS();
 	int DFS(int current_point, int min_capacity);
 
-public:
+protected:
+	std::vector<bool> is_point_reachable;
+
+	FlowNetwork();
 	FlowNetwork(std::string file_path);
 
+	void add_edge(int point_a, int point_b, int capacity);
+	void set_edge_incident_to_point();
+	void set_source_sink_points_number(int source, int sink, int number_of_points);
+
+public:
 	int find_max_flow();
 
-	void print_list_of_edges();
+	friend class FindMaxFlowTest;
 };
 
 #endif

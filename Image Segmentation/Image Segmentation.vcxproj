@@ -145,12 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FindMaxFlowTest.cpp" />
     <ClCompile Include="FlowNetwork.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edge.h" />

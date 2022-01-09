@@ -49,6 +49,10 @@ int FlowNetwork::DFS(int current_point, int min_capacity)
 			if (delta != 0)
 			{
 				edge->flow += delta;
+				if (edge->point_b != sink)
+				{
+					is_point_reachable[edge->point_b - 1] = true;
+				}
 				return delta;
 			}
 		}
@@ -59,12 +63,24 @@ int FlowNetwork::DFS(int current_point, int min_capacity)
 			if (delta != 0)
 			{
 				edge->flow -= delta;
+				if (edge->point_a != sink)
+				{
+					is_point_reachable[edge->point_a - 1] = true;
+				}
 				return delta;
 			}
 		}
 		++accessible_edge_from_point[current_point];
 	}
 	return 0;
+}
+
+FlowNetwork::FlowNetwork()
+{
+	number_of_points = 0;
+	number_of_edges = 0;
+	source = 0;
+	sink = 0;
 }
 
 FlowNetwork::FlowNetwork(std::string file_path)
@@ -118,6 +134,34 @@ FlowNetwork::FlowNetwork(std::string file_path)
 	}
 }
 
+void FlowNetwork::set_source_sink_points_number(int source, int sink, int number_of_points)
+{
+	this->source = source;
+	this->sink = sink;
+	this->number_of_points = number_of_points;
+
+	shortest_path_to_point.reserve(number_of_points);
+	first_edge_number_from_point.reserve(number_of_points);
+	edges_incident_to_point.resize(number_of_points);
+	accessible_edge_from_point.reserve(number_of_points);
+}
+
+void FlowNetwork::add_edge(int point_a, int point_b, int capacity)
+{
+	list_of_edges.emplace_back(Edge{ point_a, point_b, capacity, 0 });
+
+	++number_of_edges;
+}
+
+void FlowNetwork::set_edge_incident_to_point()
+{
+	for (Edge& edge : list_of_edges)
+	{
+		edges_incident_to_point[edge.point_a].emplace_back(&edge);
+		edges_incident_to_point[edge.point_b].emplace_back(&edge);
+	}
+}
+
 int FlowNetwork::find_max_flow()
 {
 	int max_flow{ 0 };
@@ -127,6 +171,8 @@ int FlowNetwork::find_max_flow()
 	{
 		accessible_edge_from_point.clear();
 		accessible_edge_from_point.resize(number_of_points, 0);
+		is_point_reachable.clear();
+		is_point_reachable.resize(number_of_points - 2, false);
 
 		while (flow = DFS(source, INT_MAX))
 		{
@@ -134,15 +180,4 @@ int FlowNetwork::find_max_flow()
 		}
 	}
 	return max_flow;
-}
-
-void FlowNetwork::print_list_of_edges()
-{
-	std::cout << "Network" << std::endl;
-	for (const Edge& edge : list_of_edges)
-	{
-		std::cout << edge.point_a << ' ' << edge.point_b << ' '
-			<< edge.capacity << ' ' << edge.flow << std::endl;
-	}
-	std::cout << std::endl;
 }
