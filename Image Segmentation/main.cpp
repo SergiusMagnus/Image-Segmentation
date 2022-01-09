@@ -4,6 +4,7 @@
 #include "FlowNetwork.h"
 #include "FindMaxFlowTest.h"
 #include "Image.h"
+#include "ImageSegmentationExamples.h"
 
 int main()
 {
@@ -12,13 +13,16 @@ int main()
 	FindMaxFlowTest::test_3();
 	FindMaxFlowTest::test_4();*/
 
-	Image image("Images/banana1-gr.jpg", "BackgroundPixels/banana1-gr.txt", "ObjectPixels/banana1-gr.txt");
+	//ImageSegmentationExamples::banana();
+	//ImageSegmentationExamples::fullmoon();
+
+
+	Image image("Images/fullmoon-gr.jpg", "BackgroundPixels/fullmoon-gr.txt", "ObjectPixels/fullmoon-gr.txt");
 
 	const int sigma{ 2 };
-	const double lambda{ 0.1 };
+	const double lambda{ .5 };
 	const bool eight_edges{ false };
 
-	image.build_network(sigma, lambda, eight_edges);
-	std::cout << image.find_max_flow() << std::endl;
-	image.segment_image();
+	image.segment_image(sigma, lambda, eight_edges);
+	image.save_image("SegmentedImages/fullmoon-gr.jpg");
 }

@@ -30,20 +30,24 @@ private:
 	std::array<int, 256> background_pixels_histogram;
 	std::array<int, 256> object_pixels_histogram;
 
-	std::array<double, 265> background_pixels_probability;
-	std::array<double, 265> object_pixels_probability;
+	std::array<double, 256> background_pixels_probability;
+	std::array<double, 256> object_pixels_probability;
 
 	bool is_pixel_background(int x, int y);
 	bool is_pixel_object(int x, int y);
-
-public:
-	Image(std::string image_path, std::string background_file_path, std::string object_file_path);
 
 	void set_background_pixels(std::string file_path);
 	void set_object_pixels(std::string file_path);
 
 	void build_network(int sigma, double lambda, bool eight_edges);
 	void segment_image();
+	void show_image();
+
+public:
+	Image(std::string image_path, std::string background_file_path, std::string object_file_path);
+
+	void segment_image(int sigma, double lambda, bool eight_edges);
+	void save_image(std::string file_path);
 };
 
 #endif

@@ -97,7 +97,7 @@ FlowNetwork::FlowNetwork(std::string file_path)
 
 	list_of_edges.reserve(number_of_edges);
 
-	Edge current_edge{ 0, 0, 0, 0 };
+	Edge current_edge{ 0, 0, 0., 0. };
 
 	for (int i{ 0 }; i < number_of_edges; ++i)
 	{

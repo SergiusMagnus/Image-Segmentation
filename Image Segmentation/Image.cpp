@@ -81,7 +81,7 @@ void Image::set_background_pixels(std::string file_path)
 
 	for (int i{ 0 }; i < background_pixels_histogram.size(); ++i)
 	{
-		background_pixels_probability[i] = background_pixels_histogram[i] / static_cast<double>(number_of_background_pixels);
+		background_pixels_probability[i] = static_cast<double>(background_pixels_histogram[i]) / number_of_background_pixels;
 		if (background_pixels_probability[i] == 0)
 		{
 			background_pixels_probability[i] = 1e-6;
@@ -129,7 +129,7 @@ void Image::set_object_pixels(std::string file_path)
 
 	for (int i{ 0 }; i < object_pixels_histogram.size(); ++i)
 	{
-		object_pixels_probability[i] = object_pixels_histogram[i] / static_cast<double>(number_of_object_pixels);
+		object_pixels_probability[i] = static_cast<double>(object_pixels_histogram[i]) / number_of_object_pixels;
 		if (object_pixels_probability[i] == 0)
 		{
 			object_pixels_probability[i] = 1e-6;
@@ -185,7 +185,7 @@ void Image::build_network(int sigma, double lambda, bool eight_edges)
 				int point_on_right_intensity{ image.at<uchar>(i, j + 1) };
 				double distance{ 1. };
 
-				int edge_capacity{ static_cast<int>(exp(-pow(current_point_intensity - point_on_right_intensity, 2) / (2 * pow(sigma, 2))) * 1 / distance)};
+				int edge_capacity{ static_cast<int>(exp(-pow(current_point_intensity - point_on_right_intensity, 2) / (2 * pow(sigma, 2))) * 1 / distance) };
 
 				add_edge(current_point, point_on_right, edge_capacity);
 			}
@@ -235,7 +235,7 @@ void Image::build_network(int sigma, double lambda, bool eight_edges)
 		{
 			int current_point{ i * width + j + 1 };
 
-			int edge_capacity{};
+			double edge_capacity{};
 
 			if (is_pixel_background(i, j))
 			{
@@ -281,7 +281,23 @@ void Image::segment_image()
 			image.at<uchar>(x, y) = 0;
 		}
 	}
+}
 
+void Image::show_image()
+{
 	cv::imshow("Window", image);
 	cv::waitKey();
+}
+
+void Image::save_image(std::string file_path)
+{
+	cv::imwrite(file_path, image);
+}
+
+void Image::segment_image(int sigma, double lambda, bool eight_edges)
+{
+	build_network(sigma, lambda, eight_edges);
+	find_max_flow();
+	segment_image();
+	show_image();
 }

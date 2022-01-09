@@ -148,6 +148,7 @@
     <ClCompile Include="FindMaxFlowTest.cpp" />
     <ClCompile Include="FlowNetwork.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageSegmentationExamples.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="FindMaxFlowTest.h" />
     <ClInclude Include="FlowNetwork.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="ImageSegmentationExamples.h" />
     <ClInclude Include="Rectangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
